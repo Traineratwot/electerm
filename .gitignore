@@ -115,4 +115,5 @@ dist
 /*.tar
 /*.gz
 .vscode
+.idea
 /test-results
