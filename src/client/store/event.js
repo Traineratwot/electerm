@@ -3,47 +3,18 @@
  */
 
 import postMessage from '../common/post-msg'
-import { commonActions } from '../common/constants'
+import refs from '../components/common/ref'
 
 export default Store => {
-  Store.prototype.initStoreEvents = function () {
-    window.addEventListener('message', window.store.onStoreEvent)
-  }
-
-  Store.prototype.onStoreEvent = function (e) {
-    const { store } = window
-    const {
-      action
-    } = e.data || {}
-    if (action !== commonActions.updateStore) {
-      return false
-    }
-    const {
-      func,
-      prop,
-      value,
-      args = []
-    } = e.data || {}
-    if (func) {
-      store[func](...args)
-    } else if (prop) {
-      store[prop] = value
-    }
-  }
-
   Store.prototype.focus = function () {
     window.focused = true
-    postMessage({
-      type: 'focus'
-    })
+    refs.get('term-' + window.store.activeTabId)?.term?.focus()
   }
 
   Store.prototype.blur = function () {
     window.focused = false
     window.pre.runSync('windowMove', false)
-    postMessage({
-      type: 'blur'
-    })
+    refs.get('term-' + window.store.activeTabId)?.term?.blur()
   }
 
   Store.prototype.onBlur = function () {
